@@ -19,6 +19,9 @@ brew install thomaslima/tap/xschem-mac
 ln -sf "$(brew --prefix)/opt/xschem-mac/Xschem.app" /Applications/Xschem.app
 ```
 
+If `/Applications/Xschem.app` is already a folder (for example a copy from the release disk
+image), move it to the Trash first; otherwise `ln` puts the link inside that folder.
+
 `brew install --HEAD thomaslima/tap/xschem-mac` builds the fork's latest `main`.
 
 A prebuilt, self-contained `Xschem.app` (no Homebrew needed) is also on the fork's

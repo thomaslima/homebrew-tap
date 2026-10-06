@@ -26,6 +26,9 @@ class XschemMac < Formula
     <<~EOS
       Xschem.app starts this xschem from the Finder or the Dock. To show it in Applications:
         ln -sf "#{opt_prefix}/Xschem.app" /Applications/Xschem.app
+      If /Applications/Xschem.app is already a folder (for example a copy from the
+      release disk image), move it to the Trash first; otherwise ln puts the link
+      inside that folder.
     EOS
   end
 
