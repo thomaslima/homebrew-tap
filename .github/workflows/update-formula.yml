@@ -1,0 +1,73 @@
+name: Update formula
+
+# Points xschem-mac at a tag of thomaslima/xschem: sets url, version and sha256, builds and
+# tests the formula, and commits the change to main. Run by hand (Actions > Update formula >
+# Run workflow) after the tag exists, normally after the Release workflow of thomaslima/xschem.
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag of thomaslima/xschem, for example v3.4.8RC-mac.3
+        required: true
+        type: string
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash -xeuo pipefail {0}
+
+jobs:
+  update:
+    runs-on: macos-26
+    permissions:
+      contents: write
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@e99025eb970cfa124b8284a35463d87426917478 # 2026.09.28.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Point xschem-mac at the tag
+        env:
+          TAG: ${{ inputs.tag }}
+        run: |
+          case $TAG in
+            v[0-9]*) ;;
+            *) echo "::error::tag '$TAG' does not start with v and a digit"; exit 1 ;;
+          esac
+          url="https://github.com/thomaslima/xschem/archive/refs/tags/$TAG.tar.gz"
+          curl -fsSL -o "$RUNNER_TEMP/source.tar.gz" "$url"
+          sha=$(shasum -a 256 "$RUNNER_TEMP/source.tar.gz" | cut -d' ' -f1)
+          formula="$(brew --repository thomaslima/tap)/Formula/xschem-mac.rb"
+          sed -i '' -E \
+            -e "s|^  url \".*\"$|  url \"$url\"|" \
+            -e "s|^  version \".*\"$|  version \"${TAG#v}\"|" \
+            -e "s|^  sha256 \".*\"$|  sha256 \"$sha\"|" "$formula"
+          grep -qx "  url \"$url\"" "$formula"
+          grep -qx "  version \"${TAG#v}\"" "$formula"
+          grep -qx "  sha256 \"$sha\"" "$formula"
+          git -C "$(dirname "$formula")" diff
+
+      - name: Build and test the formula
+        run: |
+          brew install --build-from-source thomaslima/tap/xschem-mac
+          brew test thomaslima/tap/xschem-mac
+          brew audit --strict thomaslima/tap/xschem-mac
+
+      - name: Commit and push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          cd "$(brew --repository thomaslima/tap)"
+          if git diff --quiet; then
+            echo "::notice::xschem-mac already points at $TAG"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -a -m "xschem-mac ${TAG#v}" --author "Thomas Ferreira de Lima <github@tlima.me>"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:main

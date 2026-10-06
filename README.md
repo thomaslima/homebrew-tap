@@ -29,3 +29,10 @@ A prebuilt, self-contained `Xschem.app` (no Homebrew needed) is also on the fork
 
 See [README_MacOS.md](https://github.com/thomaslima/xschem/blob/main/README_MacOS.md) in the
 fork for what the native build supports.
+
+## Updating the formula
+
+Run Actions > Update formula > Run workflow with a tag of thomaslima/xschem (for example
+`v3.4.8RC-mac.3`). It sets `url`, `version` and `sha256`, builds and tests the formula on
+macOS, and commits the change. The release process is described in
+[XSchemMac/README.md](https://github.com/thomaslima/xschem/blob/main/XSchemMac/README.md#releases).
