@@ -21,5 +21,8 @@ ln -sf "$(brew --prefix)/opt/xschem-mac/Xschem.app" /Applications/Xschem.app
 
 `brew install --HEAD thomaslima/tap/xschem-mac` builds the fork's latest `main`.
 
+A prebuilt, self-contained `Xschem.app` (no Homebrew needed) is also on the fork's
+[Releases](https://github.com/thomaslima/xschem/releases) page.
+
 See [README_MacOS.md](https://github.com/thomaslima/xschem/blob/main/README_MacOS.md) in the
 fork for what the native build supports.
