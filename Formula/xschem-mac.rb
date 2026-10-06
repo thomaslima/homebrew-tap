@@ -1,9 +1,9 @@
 class XschemMac < Formula
   desc "Schematic capture and netlisting, native macOS (Aqua Tk) fork of xschem"
   homepage "https://github.com/thomaslima/xschem"
-  url "https://github.com/thomaslima/xschem/archive/refs/tags/v3.4.8RC-mac.2.tar.gz"
-  version "3.4.8RC-mac.2"
-  sha256 "8a22444cd60a01578d9f3ba8e0d4bdd39b9707d0cb234699c6f8f8c550da639a"
+  url "https://github.com/thomaslima/xschem/archive/refs/tags/v3.4.8RC-mac.3.tar.gz"
+  version "3.4.8RC-mac.3"
+  sha256 "a7f8556408c49048975676b2dbf805e4d22d946d17734e172ffbe598998469b3"
   license "GPL-2.0-or-later"
   head "https://github.com/thomaslima/xschem.git", branch: "main"
 
